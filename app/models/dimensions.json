@@ -1,0 +1,113 @@
+[
+    {
+        "file": "01Basis1.stl",
+        "dim": {
+            "x": 364,
+            "y": 220,
+            "z": 142
+        },
+        "next_joint": {
+            "theta": 0,
+            "d": 142,
+            "alpha": 0,
+            "a": 0
+        }
+    },
+    {
+        "file": "02Dreh1C.stl",
+        "dim": {
+            "x": 319,
+            "y": 105,
+            "z": 223
+        },
+        "next_joint": {
+            "theta": 0,
+            "d": 145,
+            "alpha": 90,
+            "a": 0
+        }
+    },
+    {
+        "file": "03Arm1B35cm.stl",
+        "dim": {
+            "x": 135,
+            "y": 460,
+            "z": 113
+        },
+        "next_joint": {
+            "theta": 0,
+            "d": 0,
+            "alpha": 0,
+            "a": 350
+        }
+    },
+    {
+        "file": "04Arm2B27cm.stl",
+        "dim": {
+            "x": 99.3,
+            "y": 350,
+            "z": 78.5
+        },
+        "next_joint": {
+            "theta": 0,
+            "d": 0,
+            "alpha": 0,
+            "a": 270
+        }
+    },
+    {
+        "file": "05Arm3B17cm.stl",
+        "dim": {
+            "x": 99.3,
+            "y": 350,
+            "z": 78.5
+        },
+        "next_joint": {
+            "theta": 0,
+            "d": 0,
+            "alpha": 0,
+            "a": 160
+        }
+    },
+    {
+        "dim": {
+            "x": 99.3,
+            "y": 350,
+            "z": 78.5
+        },
+        "next_joint": {
+            "theta": 90,
+            "d": 0,
+            "alpha": 90,
+            "a": 0
+        }
+    },
+    {
+        "file": "06Dreh 5C.stl",
+        "dim": {
+            "x": 99.3,
+            "y": 350,
+            "z": 78.5
+        },
+        "next_joint": {
+            "theta": 0,
+            "d": 11.5,
+            "alpha": 0,
+            "a": 0
+        }
+    },
+    {
+        "file": "07Testspitze mit Koordinatensystem.stl",
+        "dim": {
+            "x": 99.3,
+            "y": 350,
+            "z": 78.5
+        },
+        "next_joint": {
+            "theta": 0,
+            "d": 90,
+            "alpha": 0,
+            "a": 0
+        }
+    }
+]
