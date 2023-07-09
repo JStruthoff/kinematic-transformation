@@ -19,9 +19,24 @@ const camera = new THREE.PerspectiveCamera(
 camera.position.z = 3
 
 // setup onClick events
-var button_t1_inc = document.getElementById("button_t1_inc");
 var button_t1_dec = document.getElementById("button_t1_dec");
+var button_t1_inc = document.getElementById("button_t1_inc");
+var button_t2_dec = document.getElementById("button_t2_dec");
+var button_t2_inc = document.getElementById("button_t2_inc");
+var button_t3_dec = document.getElementById("button_t3_dec");
+var button_t3_inc = document.getElementById("button_t3_inc");
+var button_t4_dec = document.getElementById("button_t4_dec");
+var button_t4_inc = document.getElementById("button_t4_inc");
+var button_t5_dec = document.getElementById("button_t5_dec");
+var button_t5_inc = document.getElementById("button_t5_inc");
+var button_t6_dec = document.getElementById("button_t6_dec");
+var button_t6_inc = document.getElementById("button_t6_inc");
 var t1_rate_of_change = 0;
+var t2_rate_of_change = 0;
+var t3_rate_of_change = 0;
+var t4_rate_of_change = 0;
+var t5_rate_of_change = 0;
+var t6_rate_of_change = 0;
 button_t1_inc.addEventListener("mousedown", () => { t1_rate_of_change = 0.01; });
 button_t1_inc.addEventListener("mouseup", () => { t1_rate_of_change = 0; });
 button_t1_inc.addEventListener("mouseleave", () => { t1_rate_of_change = 0; });
@@ -29,12 +44,49 @@ button_t1_dec.addEventListener("mousedown", () => { t1_rate_of_change = -0.01; }
 button_t1_dec.addEventListener("mouseup", () => { t1_rate_of_change = 0; });
 button_t1_dec.addEventListener("mouseleave", () => { t1_rate_of_change = 0; });
 
+button_t2_inc.addEventListener("mousedown", () => { t2_rate_of_change = 0.01; });
+button_t2_inc.addEventListener("mouseup", () => { t2_rate_of_change = 0; });
+button_t2_inc.addEventListener("mouseleave", () => { t2_rate_of_change = 0; });
+button_t2_dec.addEventListener("mousedown", () => { t2_rate_of_change = -0.01; });
+button_t2_dec.addEventListener("mouseup", () => { t2_rate_of_change = 0; });
+button_t2_dec.addEventListener("mouseleave", () => { t2_rate_of_change = 0; });
+
+button_t3_inc.addEventListener("mousedown", () => { t3_rate_of_change = 0.01; });
+button_t3_inc.addEventListener("mouseup", () => { t3_rate_of_change = 0; });
+button_t3_inc.addEventListener("mouseleave", () => { t3_rate_of_change = 0; });
+button_t3_dec.addEventListener("mousedown", () => { t3_rate_of_change = -0.01; });
+button_t3_dec.addEventListener("mouseup", () => { t3_rate_of_change = 0; });
+button_t3_dec.addEventListener("mouseleave", () => { t3_rate_of_change = 0; });
+
+button_t4_inc.addEventListener("mousedown", () => { t4_rate_of_change = 0.01; });
+button_t4_inc.addEventListener("mouseup", () => { t4_rate_of_change = 0; });
+button_t4_inc.addEventListener("mouseleave", () => { t4_rate_of_change = 0; });
+button_t4_dec.addEventListener("mousedown", () => { t4_rate_of_change = -0.01; });
+button_t4_dec.addEventListener("mouseup", () => { t4_rate_of_change = 0; });
+button_t4_dec.addEventListener("mouseleave", () => { t4_rate_of_change = 0; });
+
+button_t5_inc.addEventListener("mousedown", () => { t5_rate_of_change = 0.01; });
+button_t5_inc.addEventListener("mouseup", () => { t5_rate_of_change = 0; });
+button_t5_inc.addEventListener("mouseleave", () => { t5_rate_of_change = 0; });
+button_t5_dec.addEventListener("mousedown", () => { t5_rate_of_change = -0.01; });
+button_t5_dec.addEventListener("mouseup", () => { t5_rate_of_change = 0; });
+button_t5_dec.addEventListener("mouseleave", () => { t5_rate_of_change = 0; });
+button_t4_dec.addEventListener("mouseleave", () => { t4_rate_of_change = 0; });
+
+button_t6_inc.addEventListener("mousedown", () => { t6_rate_of_change = 0.01; });
+button_t6_inc.addEventListener("mouseup", () => { t6_rate_of_change = 0; });
+button_t6_inc.addEventListener("mouseleave", () => { t6_rate_of_change = 0; });
+button_t6_dec.addEventListener("mousedown", () => { t6_rate_of_change = -0.01; });
+button_t6_dec.addEventListener("mouseup", () => { t6_rate_of_change = 0; });
+button_t6_dec.addEventListener("mouseleave", () => { t6_rate_of_change = 0; });
+
 
 let t1_value_dom = document.getElementById('value_t1');
 let t2_value_dom = document.getElementById('value_t2');
 let t3_value_dom = document.getElementById('value_t3');
 let t4_value_dom = document.getElementById('value_t4');
 let t5_value_dom = document.getElementById('value_t5');
+let t6_value_dom = document.getElementById('value_t6');
 
 const renderer = new THREE.WebGLRenderer()
 renderer.outputEncoding = THREE.sRGBEncoding
@@ -62,7 +114,7 @@ function load_arm(filename, onLoad)
             'models/' + filename,
             function (geometry) {
                 const mesh = new THREE.Mesh(geometry, material)
-                scene.add(mesh)
+                // scene.add(mesh)
                 onLoad(mesh);
             },
             (xhr) => {
@@ -137,10 +189,11 @@ const loader = new STLLoader()
 // add_cylinder(1, 450, 0xff0000);
 
 var arms = [];
+var base = new THREE.Mesh();
 fetch('models/dimensions.json')
 .then((response) => response.json())
 .then((json) => {
-    console.log(json);
+        console.log(json);
         json.forEach((item) => {
             console.log('Loading: ' + item.file);
             load_arm(item.file, (mesh)=>{
@@ -153,19 +206,38 @@ fetch('models/dimensions.json')
 var theta = [];
 var controls_avail = false;
 setTimeout(()=>{
+    // Transformation from current mesh to next mesh
+    // arms[6].mesh.userData = params_to_rad(arms[6].next_joint);
+    // arms[4].mesh.userData = [ params_to_rad(arms[4].next_joint), params_to_rad(arms[5].next_joint) ];
+    // arms[3].mesh.userData = params_to_rad(arms[3].next_joint);
+    arms[2].mesh.userData = params_to_rad(arms[2].next_joint);
+    arms[1].mesh.userData = params_to_rad(arms[1].next_joint);
+    arms[0].mesh.userData = params_to_rad(arms[0].next_joint);
+    
+    // set as child of preceding object
+    arms[6].mesh.add(arms[7].mesh);
+    arms[4].mesh.add(arms[6].mesh);
+    arms[3].mesh.add(arms[4].mesh);
+    arms[2].mesh.add(arms[3].mesh);
+    arms[1].mesh.add(arms[2].mesh);
+    arms[0].mesh.add(arms[1].mesh);   
+    scene.add(arms[0].mesh);
+
     // console.log("inside", arms);
     let origin = new THREE.Matrix4();
+    let axishelper;
     arms.forEach(item => {
-        // console.log(JSON.stringify(origin));
         if(item.file)
             theta.push(item.next_joint.theta);
-        if(item.mesh)
-            item.mesh.geometry.applyMatrix4(origin);
+
         transform(origin, params_to_rad(item.next_joint));
-        let axeshelper = new THREE.AxesHelper(100);
-        axeshelper.geometry.applyMatrix4(origin);
+        let helper = new THREE.AxesHelper(100);
+        helper.mastrix9
+        helper.geometry.applyMatrix4(origin);
         scene.add(axeshelper);
     });
+
+
     controls_avail = true;
 }, 1000.0);
 
@@ -183,19 +255,23 @@ function replace_theta(params, theta)
 
 function update_model_pose()
 {
-    let origin = new THREE.Matrix4();
-    arms.forEach((item, i) => {
-        let params = item.next_joint;
-        if(item.file){
-            params = replace_theta(item.next_joint, theta[i])
+
+    // arms[6].mesh.userData.theta = theta[5];
+    // arms[4].mesh.userData[0].theta = theta[4];
+    // arms[3].mesh.userData.theta = theta[3];
+    // arms[2].mesh.userData.theta = theta[2];
+    arms[2].mesh.userData.theta = theta[1];
+    arms[1].mesh.userData.theta = theta[0];
+    arms[0].mesh.traverse((mesh) => {
+        if(Object.keys(mesh.userData).length !== 0) {
+            mesh.matrixAutoUpdate = false;
+            var m;
+            if( Array.isArray(mesh.userData) )
+                m = transform(transform(undefined, mesh.userData[0]), mesh.userData[1]);
+            else 
+                m = transform(undefined, mesh.userData);
+            mesh.matrix = m;
         }
-        if(item.mesh){
-            item.mesh.matrixWorld = false;
-            item.mesh.matrixWorldAutoUpdate = false;
-            item.mesh.matrixWorld = origin; 
-            item.mesh.matrix = origin; 
-        }
-        origin = transform(origin, params)
     });
 }
 
@@ -214,6 +290,16 @@ function animate() {
     if(controls_avail) {
         theta[0] = theta[0] + t1_rate_of_change;
         t1_value_dom.innerHTML = theta[0];
+        theta[1] = theta[1] + t2_rate_of_change;
+        t2_value_dom.innerHTML = theta[1];
+        theta[2] = theta[2] + t3_rate_of_change;
+        t3_value_dom.innerHTML = theta[2];
+        theta[3] = theta[3] + t4_rate_of_change;
+        t4_value_dom.innerHTML = theta[3];
+        theta[4] = theta[4] + t5_rate_of_change;
+        t5_value_dom.innerHTML = theta[4];
+        theta[5] = theta[5] + t6_rate_of_change;
+        t6_value_dom.innerHTML = theta[5];
         update_model_pose();
     }
 
